@@ -1,47 +1,49 @@
 #!/usr/bin/env python3
 """
 GitHub Profile Neofetch SVG Generator for Ravichandra Shinde (@Ravichandra531)
-Inspired by Jitmisra's Neofetch terminal design.
+Generates high-contrast Neofetch terminal cards for dark and light modes.
 """
 
 import os
 import xml.sax.saxutils as saxutils
+import numpy as np
+from PIL import Image, ImageEnhance, ImageOps
 
-# 33 Lines of high-detail developer ASCII art (48 chars wide)
+# 33 Lines of high-detail developer portrait ASCII art generated from user photo
 ASCII_ART = [
-    r"               ====++*++*#+*                           ",
-    r"            -:::==+***#*****+===                       ",
-    r"          +=---+*+*%%*+====++==**+=--                  ",
-    r"         +++=-**#*%%****=+**=+*#*=*##*++               ",
-    r"        +++++****%%#*+***#%##**#####@@@#               ",
-    r"        ***+*%#*+#@@%#%@#+*#%@@%@%*##@@*               ",
-    r"        -+%@@@%*%%%#@@@%##%@@@@%%%*#%@@*+=             ",
-    r"        =*%@@@@@@@%###+++@@@@@@%##*#@@%##*             ",
-    r"        -+##%@@@%=*++=-::+%@@@@@@@@@@@@@@              ",
-    r"         =+#%@@@#=+*##*+=+*##**%#%@@@@@@@              ",
-    r"         **#%@@%+-=+*++*=*++=+===-+#=-%@               ",
-    r"         *=%%#@#-:.:::=- .=-:::.:.-*:.=                ",
-    r"           ---**:::::==:..-=-::...-=-:                 ",
-    r"            :-:=:..:::=*+++-::....---                  ",
-    r"              ==-::::-=+**+=--:..:@@#                  ",
-    r"                 :::-+++++++=-:::*@                    ",
-    r"                 +-:::-=+=-::::-=+                     ",
-    r"                  :=-:.:::::-==--@#                    ",
-    r"                  -=-+****+++=-=%@@%*                  ",
-    r"                  -=:-+*+++=--#@%%%%%#++               ",
-    r"                  .#=:----::*@@%#%#%#####**+           ",
-    r"              +**:.##=-:. -#@%%#%%%###########*+       ",
-    r"          =***+*+.:+*=:. :*######@@###******##%%%%*    ",
-    r"      +==+*****##+-:..:.-*#****#@@#***++*******###%%*+ ",
-    r"    *++++****+*#*%=..:::*##**+#@%**++=+++********#%%## ",
-    r"   =#*##*++******#-...:*%##*+#@%*+===*#*###*******%@%# ",
-    r"  =*#+*##*++*+++*#=.  +%%#*+#@#*=-:=#@%%#*+*******#%%%+",
-    r"  +#%*###***++=++*+. -%%#**%@*+=::=#@*===*##*****##%*  ",
-    r" =**%%%#******=++++.:#%#*#@%#+-:-+#@@***+=+++*######   ",
-    r" +#%%@%***###%*++++.*#*+*%#*+-:=*%@@#++==+**#####*%*   ",
-    r"=+*%%@%**####%%++=++#*+*%#*+--+#@@@@++*##%%%%%#***#    ",
-    r"-++++##*#*++*#@*==+#+=#%*+=--+%@@@@#**+====+*#####**   ",
-    r"    %%@##****%@#+=+%+#%*+=--*%@@@@*+--===++***##**     ",
+    r"                   .-=+**+=:                    ",
+    r"               :=#%@@@@@@@@@@#=:                ",
+    r"            :#@@@@@@@@@@@@@@@@@@%*              ",
+    r"          -#@@@@@@@@@@@@@@@@@@@@@@%-            ",
+    r"         *@@@@@@@@@@@@@@@@@@@@@@@@@@#           ",
+    r"       .%@@@@@@@@@@@@%%%@@@@@@@@@@@@@@-         ",
+    r"       @@@@@@@@@%#*++++++++===*%@@@@@@@*        ",
+    r"      :@@@@@@@%#**+++++====--==+*@@@@@@@#       ",
+    r"      =%@@@@@%#**+++++=========++*%@@@@@@       ",
+    r"       *@@@@#****++++=====----==+++%@@@@*       ",
+    r"        @@@*%@@@@@@%**++====++***#*+@@@@        ",
+    r"       +%@**@@@@@@@@@@%***%@@@@@@@@#%@%         ",
+    r"      -@%@+*%@@@@@@@@@%+=#@@@@@%%@%*%@#:        ",
+    r"      .#%%+**#%%@@#%%@*==**##@@%%%*+##*=        ",
+    r"       +@#+++=+++++*##+-=+++=++++==+#%+         ",
+    r"       .%%*##*+++++#*+=--=++===--=++*#-         ",
+    r"        -##%%%#*++*#*+=-:=++=--=+**##+          ",
+    r"          =@%%%#**#%@@%#*%#+===+**##-           ",
+    r"           %@%%%#***%@%%##*==++**#%-            ",
+    r"           =@@%%%%%####********##%*             ",
+    r"            *@@@@@@@%####*##%%##@%              ",
+    r"             #@@@@@@@%###%%##%%@%               ",
+    r"             +@@@@@@@%%%#%%%%@@%                ",
+    r"             #@@@@@@@%%%#%%@@@%#-               ",
+    r"            =%%%@@@@@@@@@@@%#*###+=.            ",
+    r"        .+%@#%%%%@@@@@@@%#******+*@@@%-         ",
+    r"   .-+#@@@@@%#%%%%%%%####********%@@@@@@%+=-.   ",
+    r":+@@@@@@@@@@@%####********+++++*@@@@@@@@@@@@@#+:",
+    r"@@@@@@@@@@@@@%*++++====+++++++*@@@@@@@@@@@@@@@@@",
+    r"@@@@@@@@@@@@@@+=+++++++++++=+%@@@@@@@@@@@@@@@@@@",
+    r"@@@@@@@@@@@@@@@#+========++#@@@@@@@@@@@@@@@@@@@@",
+    r"@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@@",
+    r"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 ]
 
 def escape(s: str) -> str:
@@ -87,13 +89,12 @@ def generate_svg(theme="dark") -> str:
 
     for i, line in enumerate(ASCII_ART):
         y = start_y + i * line_step
-        # Escape line for XML
         esc_line = escape(line)
         svg_lines.append(
             f'<text xml:space="preserve" x="20" y="{y:.1f}" font-size="13" fill="url(#{grad_id})">{esc_line}</text>'
         )
 
-    # Right-side spec content mapping (index -> content)
+    # Right-side spec content mapping
     # Line 0 (y=75.0): ravi@ravichandra
     svg_lines.append(
         f'<text y="75.0" font-size="13">'
@@ -136,55 +137,32 @@ def generate_svg(theme="dark") -> str:
         )
 
     # Spec lines
-    # Line 3 (120.6)
     svg_lines.append(spec_row(120.6, "OS", "macOS · Linux (Ubuntu / Arch)"))
-    # Line 4 (135.8)
     svg_lines.append(spec_row(135.8, "Uptime", "~3 yrs · 0 → Production Engineer", val_color=accent_green))
-    # Line 5 (151.0)
     svg_lines.append(spec_row(151.0, "Host", "100xDevs Cohort · Full Stack Dev"))
-    # Line 6 (166.2)
     svg_lines.append(spec_row(166.2, "Kernel", "B.Tech Computer Science & Eng."))
-    # Line 7 (181.4)
     svg_lines.append(spec_row(181.4, "Shell", "/bin/zsh · fullstack-artisan", val_color=accent_green))
     
-    # Line 9 (211.8)
     svg_lines.append(spec_row(211.8, "Ecosystem", "Full-Stack · Systems · Realtime", val_color=accent_green, val_bold=True))
-    # Line 10 (227.0)
     svg_lines.append(spec_row(227.0, "Lang.Core", "TypeScript · Rust · JavaScript · Python · C++"))
-    # Line 11 (242.2)
     svg_lines.append(spec_row(242.2, "Lang.Web", "Next.js 14 · React · Node.js · Express"))
-    # Line 12 (257.4)
     svg_lines.append(spec_row(257.4, "Lang.Ops", "Docker · AWS · Terraform · Kafka · K8s"))
-    # Line 13 (272.6)
     svg_lines.append(spec_row(272.6, "Databases", "PostgreSQL · MongoDB · Redis · Prisma"))
 
-    # Line 15 (303.0)
     svg_lines.append(spec_row(303.0, "Now", "Building Scalable Realtime & Web3 Apps", val_color=accent_gold, val_bold=True))
-    # Line 16 (318.2)
     svg_lines.append(spec_row(318.2, "Focus", "Distributed Systems · Low-Latency Infra"))
 
-    # Line 18 (348.6): Contact Header
     svg_lines.append(section_header(348.6, "Contact"))
-    # Line 19 (363.8)
     svg_lines.append(spec_row(363.8, "Email", "ruchitrshinde@gmail.com"))
-    # Line 20 (379.0)
     svg_lines.append(spec_row(379.0, "LinkedIn", "in/ravichandrashinde", val_color=accent_green, val_bold=True))
-    # Line 21 (394.2)
     svg_lines.append(spec_row(394.2, "GitHub", "@Ravichandra531", val_color=accent_green))
-    # Line 22 (409.4)
     svg_lines.append(spec_row(409.4, "Portfolio", "ravichandrashinde.dev"))
-    # Line 23 (424.6)
     svg_lines.append(spec_row(424.6, "Location", "India 🇮🇳 · Remote Open"))
 
-    # Line 25 (455.0): Highlights Header
     svg_lines.append(section_header(455.0, "Highlights"))
-    # Line 26 (470.2)
     svg_lines.append(spec_row(470.2, "Drawlify", "Realtime collab canvas & whiteboard", val_color=accent_green, val_bold=True))
-    # Line 27 (485.4)
     svg_lines.append(spec_row(485.4, "Muzer", "Interactive collaborative music room", val_color=accent_green, val_bold=True))
-    # Line 28 (500.6)
     svg_lines.append(spec_row(500.6, "EasePay", "Modern payment wallet & webhook flow"))
-    # Line 29 (515.8)
     svg_lines.append(spec_row(515.8, "OpenSrc", "11+ Repos · Microservices & TurboRepo"))
 
     svg_lines.append("</svg>")
@@ -196,12 +174,12 @@ def main():
     dark_svg = generate_svg(theme="dark")
     with open("assets/dark_mode.svg", "w", encoding="utf-8") as f:
         f.write(dark_svg)
-    print("✅ Generated assets/dark_mode.svg")
+    print("✅ Generated assets/dark_mode.svg with user photo ASCII art")
 
     light_svg = generate_svg(theme="light")
     with open("assets/light_mode.svg", "w", encoding="utf-8") as f:
         f.write(light_svg)
-    print("✅ Generated assets/light_mode.svg")
+    print("✅ Generated assets/light_mode.svg with user photo ASCII art")
 
 if __name__ == "__main__":
     main()
