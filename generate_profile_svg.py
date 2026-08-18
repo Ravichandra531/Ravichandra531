@@ -1,185 +1,199 @@
 #!/usr/bin/env python3
 """
-GitHub Profile Neofetch SVG Generator for Ravichandra Shinde (@Ravichandra531)
-Generates high-contrast Neofetch terminal cards for dark and light modes.
+generate_profile_svg.py
+Generates dark_mode.svg and light_mode.svg terminal cards for Ravichandra Shinde's GitHub profile.
 """
 
 import os
-import xml.sax.saxutils as saxutils
-import numpy as np
-from PIL import Image, ImageEnhance, ImageOps
 
-# 33 Lines of high-detail developer portrait ASCII art generated from user photo
-ASCII_ART = [
-    r"                   .-=+**+=:                    ",
-    r"               :=#%@@@@@@@@@@#=:                ",
-    r"            :#@@@@@@@@@@@@@@@@@@%*              ",
-    r"          -#@@@@@@@@@@@@@@@@@@@@@@%-            ",
-    r"         *@@@@@@@@@@@@@@@@@@@@@@@@@@#           ",
-    r"       .%@@@@@@@@@@@@%%%@@@@@@@@@@@@@@-         ",
-    r"       @@@@@@@@@%#*++++++++===*%@@@@@@@*        ",
-    r"      :@@@@@@@%#**+++++====--==+*@@@@@@@#       ",
-    r"      =%@@@@@%#**+++++=========++*%@@@@@@       ",
-    r"       *@@@@#****++++=====----==+++%@@@@*       ",
-    r"        @@@*%@@@@@@%**++====++***#*+@@@@        ",
-    r"       +%@**@@@@@@@@@@%***%@@@@@@@@#%@%         ",
-    r"      -@%@+*%@@@@@@@@@%+=#@@@@@%%@%*%@#:        ",
-    r"      .#%%+**#%%@@#%%@*==**##@@%%%*+##*=        ",
-    r"       +@#+++=+++++*##+-=+++=++++==+#%+         ",
-    r"       .%%*##*+++++#*+=--=++===--=++*#-         ",
-    r"        -##%%%#*++*#*+=-:=++=--=+**##+          ",
-    r"          =@%%%#**#%@@%#*%#+===+**##-           ",
-    r"           %@%%%#***%@%%##*==++**#%-            ",
-    r"           =@@%%%%%####********##%*             ",
-    r"            *@@@@@@@%####*##%%##@%              ",
-    r"             #@@@@@@@%###%%##%%@%               ",
-    r"             +@@@@@@@%%%#%%%%@@%                ",
-    r"             #@@@@@@@%%%#%%@@@%#-               ",
-    r"            =%%%@@@@@@@@@@@%#*###+=.            ",
-    r"        .+%@#%%%%@@@@@@@%#******+*@@@%-         ",
-    r"   .-+#@@@@@%#%%%%%%%####********%@@@@@@%+=-.   ",
-    r":+@@@@@@@@@@@%####********+++++*@@@@@@@@@@@@@#+:",
-    r"@@@@@@@@@@@@@%*++++====+++++++*@@@@@@@@@@@@@@@@@",
-    r"@@@@@@@@@@@@@@+=+++++++++++=+%@@@@@@@@@@@@@@@@@@",
-    r"@@@@@@@@@@@@@@@#+========++#@@@@@@@@@@@@@@@@@@@@",
-    r"@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@@",
-    r"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+# 33-line custom ASCII portrait
+ASCII_PORTRAIT = [
+    "                   .-=+**+=:                    ",
+    "               :=#%@@@@@@@@@@#=:                ",
+    "            :#@@@@@@@@@@@@@@@@@@%*              ",
+    "          -#@@@@@@@@@@@@@@@@@@@@@@%-            ",
+    "         *@@@@@@@@@@@@@@@@@@@@@@@@@@#           ",
+    "       .%@@@@@@@@@@@@%%%@@@@@@@@@@@@@@-         ",
+    "       @@@@@@@@@%#*++++++++===*%@@@@@@@*        ",
+    "      :@@@@@@@%#**+++++====--==+*@@@@@@@#       ",
+    "      =%@@@@@%#**+++++=========++*%@@@@@@       ",
+    "       *@@@@#****++++=====----==+++%@@@@*       ",
+    "        @@@*%@@@@@@%**++====++***#*+@@@@        ",
+    "       +%@**@@@@@@@@@@%***%@@@@@@@@#%@%         ",
+    "      -@%@+*%@@@@@@@@@%+=#@@@@@%%@%*%@#:        ",
+    "      .#%%+**#%%@@#%%@*==**##@@%%%*+##*=        ",
+    "       +@#+++=+++++*##+-=+++=++++==+#%+         ",
+    "       .%%*##*+++++#*+=--=++===--=++*#-         ",
+    "        -##%%%#*++*#*+=-:=++=--=+**##+          ",
+    "          =@%%%#**#%@@%#*%#+===+**##-           ",
+    "           %@%%%#***%@%%##*==++**#%-            ",
+    "           =@@%%%%%####********##%*             ",
+    "            *@@@@@@@%####*##%%##@%              ",
+    "             #@@@@@@@%###%%##%%@%               ",
+    "             +@@@@@@@%%%#%%%%@@%                ",
+    "             #@@@@@@@%%%#%%@@@%#-               ",
+    "            =%%%@@@@@@@@@@@%#*###+=.            ",
+    "        .+%@#%%%%@@@@@@@%#******+*@@@%-         ",
+    "   .-+#@@@@@%#%%%%%%%####********%@@@@@@%+=-.   ",
+    ":+@@@@@@@@@@@%####********+++++*@@@@@@@@@@@@@#+:",
+    "@@@@@@@@@@@@@%*++++====+++++++*@@@@@@@@@@@@@@@@@",
+    "@@@@@@@@@@@@@@+=+++++++++++=+%@@@@@@@@@@@@@@@@@@",
+    "@@@@@@@@@@@@@@@#+========++#@@@@@@@@@@@@@@@@@@@@",
+    "@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@@",
+    "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 ]
 
-def escape(s: str) -> str:
-    return saxutils.escape(s)
-
-def generate_svg(theme="dark") -> str:
-    is_dark = theme == "dark"
-
-    # Theme colors
-    border_color = "#30363d" if is_dark else "#d0d7de"
-    header_text_color = "#8b949e" if is_dark else "#57606a"
-    sep_color = "#3f4c57" if is_dark else "#d0d7de"
+def build_svg(theme="dark"):
+    is_dark = (theme == "dark")
     
-    # Text colors
-    user_color = "#7ee88a" if is_dark else "#1a7f37"
-    at_color = "#8b949e" if is_dark else "#57606a"
-    host_title_color = "#5ad3e0" if is_dark else "#0969da"
-    subtitle_color = "#8b949e" if is_dark else "#57606a"
-    
-    label_color = "#5ad3e0" if is_dark else "#0969da"
-    value_color = "#c9d1d9" if is_dark else "#24292f"
-    accent_green = "#7ee88a" if is_dark else "#1a7f37"
-    accent_gold = "#ecc86e" if is_dark else "#9a6700"
-    
-    grad_id = "pgd" if is_dark else "pgl"
-    grad_start = "#2FBF71" if is_dark else "#0a7d3b"
-    grad_end = "#5ad3e0" if is_dark else "#0e7490"
+    # Palette
+    if is_dark:
+        stroke_card = "#30363d"
+        title_fill = "#8b949e"
+        grad_id = "pgd"
+        grad_stops = '<stop offset="0" stop-color="#2FBF71"/><stop offset="1" stop-color="#5ad3e0"/>'
+        user_color = "#7ee88a"
+        at_color = "#8b949e"
+        host_color = "#5ad3e0"
+        sub_color = "#8b949e"
+        divider_color = "#3f4c57"
+        key_color = "#5ad3e0"
+        val_default = "#c9d1d9"
+        val_accent = "#7ee88a"
+        val_highlight = "#ecc86e"
+        sec_header = "#ecc86e"
+    else:
+        stroke_card = "#d0d7de"
+        title_fill = "#57606a"
+        grad_id = "pgl"
+        grad_stops = '<stop offset="0" stop-color="#0a7d3b"/><stop offset="1" stop-color="#0e7490"/>'
+        user_color = "#1a7f37"
+        at_color = "#57606a"
+        host_color = "#0969da"
+        sub_color = "#57606a"
+        divider_color = "#d0d7de"
+        key_color = "#0969da"
+        val_default = "#24292f"
+        val_accent = "#1a7f37"
+        val_highlight = "#9a6700"
+        sec_header = "#9a6700"
 
-    svg_lines = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="841" height="583" viewBox="0 0 841 583" font-family="\'JetBrains Mono\',\'SFMono-Regular\',Consolas,\'Liberation Mono\',monospace">',
-        f'<defs><linearGradient id="{grad_id}" x1="0" y1="0" x2="0.4" y2="1"><stop offset="0" stop-color="{grad_start}"/><stop offset="1" stop-color="{grad_end}"/></linearGradient></defs>',
-        f'<rect x="1" y="1" width="839" height="581" rx="14" fill="none" stroke="{border_color}" stroke-width="1.4"/>',
-        '<circle cx="24" cy="22.0" r="6" fill="#ff5f56"/>',
-        '<circle cx="44" cy="22.0" r="6" fill="#ffbd2e"/>',
-        '<circle cx="64" cy="22.0" r="6" fill="#27c93f"/>',
-        f'<line x1="1" y1="41" x2="840" y2="41" stroke="{border_color}" stroke-width="1.2"/>',
-        f'<text x="420.5" y="25.0" fill="{header_text_color}" font-size="13" text-anchor="middle">ravi@ravichandra — neofetch</text>',
-    ]
-
-    # Render left-side ASCII art lines
+    width = 860
+    height = 585
     start_y = 75.0
     line_step = 15.2
-
-    for i, line in enumerate(ASCII_ART):
-        y = start_y + i * line_step
-        esc_line = escape(line)
-        svg_lines.append(
-            f'<text xml:space="preserve" x="20" y="{y:.1f}" font-size="13" fill="url(#{grad_id})">{esc_line}</text>'
-        )
-
-    # Right-side spec content mapping
-    # Line 0 (y=75.0): ravi@ravichandra
-    svg_lines.append(
-        f'<text y="75.0" font-size="13">'
-        f'<tspan xml:space="preserve" x="456.0" fill="{user_color}" font-weight="700">ravi</tspan>'
-        f'<tspan xml:space="preserve" x="488.0" fill="{at_color}">@</tspan>'
-        f'<tspan xml:space="preserve" x="496.0" fill="{host_title_color}" font-weight="700">ravichandra</tspan>'
-        f'</text>'
-    )
-
-    # Line 1 (y=90.2): Subtitle
-    svg_lines.append(
-        f'<text y="90.2" font-size="13">'
-        f'<tspan xml:space="preserve" x="456.0" fill="{subtitle_color}">Full Stack &amp; Systems Engineer · Builder</tspan>'
-        f'</text>'
-    )
-
-    # Line 2 (y=105.4): Separator
-    svg_lines.append(
-        f'<text y="105.4" font-size="13">'
-        f'<tspan xml:space="preserve" x="456.0" fill="{sep_color}">  ────────────────────────────────────────</tspan>'
-        f'</text>'
-    )
-
-    def spec_row(y_val, label, value, val_color=value_color, val_bold=False):
-        b_attr = ' font-weight="700"' if val_bold else ''
-        return (
-            f'<text y="{y_val:.1f}" font-size="13">'
-            f'<tspan xml:space="preserve" x="456.0" fill="{label_color}" font-weight="700">  {label:<11}</tspan>'
-            f'<tspan xml:space="preserve" x="551.5" fill="{val_color}"{b_attr}>{escape(value)}</tspan>'
-            f'</text>'
-        )
-
-    def section_header(y_val, title):
-        line_chars = "─" * (39 - len(title))
-        return (
-            f'<text y="{y_val:.1f}" font-size="13">'
-            f'<tspan xml:space="preserve" x="456.0" fill="{accent_gold}" font-weight="700">  {title} </tspan>'
-            f'<tspan xml:space="preserve" x="{456.0 + (len(title)+3)*7.8:.1f}" fill="{sep_color}">{line_chars}</tspan>'
-            f'</text>'
-        )
-
-    # Spec lines
-    svg_lines.append(spec_row(120.6, "OS", "macOS · Linux (Ubuntu / Arch)"))
-    svg_lines.append(spec_row(135.8, "Uptime", "~3 yrs · 0 → Production Engineer", val_color=accent_green))
-    svg_lines.append(spec_row(151.0, "Host", "100xDevs Cohort · Full Stack Dev"))
-    svg_lines.append(spec_row(166.2, "Kernel", "B.Tech Computer Science & Eng."))
-    svg_lines.append(spec_row(181.4, "Shell", "/bin/zsh · fullstack-artisan", val_color=accent_green))
     
-    svg_lines.append(spec_row(211.8, "Ecosystem", "Full-Stack · Systems · Realtime", val_color=accent_green, val_bold=True))
-    svg_lines.append(spec_row(227.0, "Lang.Core", "TypeScript · Rust · JavaScript · Python · C++"))
-    svg_lines.append(spec_row(242.2, "Lang.Web", "Next.js 14 · React · Node.js · Express"))
-    svg_lines.append(spec_row(257.4, "Lang.Ops", "Docker · AWS · Terraform · Kafka · K8s"))
-    svg_lines.append(spec_row(272.6, "Databases", "PostgreSQL · MongoDB · Redis · Prisma"))
+    svg_lines = []
+    svg_lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" font-family="\'JetBrains Mono\',\'SFMono-Regular\',Consolas,\'Liberation Mono\',monospace">')
+    svg_lines.append(f'<defs><linearGradient id="{grad_id}" x1="0" y1="0" x2="0.4" y2="1">{grad_stops}</linearGradient></defs>')
+    svg_lines.append(f'<rect x="1" y="1" width="{width-2}" height="{height-2}" rx="14" fill="none" stroke="{stroke_card}" stroke-width="1.4"/>')
+    svg_lines.append('<circle cx="24" cy="22.0" r="6" fill="#ff5f56"/>')
+    svg_lines.append('<circle cx="44" cy="22.0" r="6" fill="#ffbd2e"/>')
+    svg_lines.append('<circle cx="64" cy="22.0" r="6" fill="#27c93f"/>')
+    svg_lines.append(f'<line x1="1" y1="41" x2="{width-1}" y2="41" stroke="{stroke_card}" stroke-width="1.2"/>')
+    svg_lines.append(f'<text x="{width/2:.1f}" y="25.0" fill="{title_fill}" font-size="13" text-anchor="middle">ravi@ravichandra — neofetch</text>')
 
-    svg_lines.append(spec_row(303.0, "Now", "Building Scalable Realtime & Web3 Apps", val_color=accent_gold, val_bold=True))
-    svg_lines.append(spec_row(318.2, "Focus", "Distributed Systems · Low-Latency Infra"))
+    # ASCII portrait lines (left side)
+    for i, line in enumerate(ASCII_PORTRAIT):
+        y = start_y + i * line_step
+        svg_lines.append(f'<text xml:space="preserve" x="20" y="{y:.1f}" font-size="13" fill="url(#{grad_id})">{line}</text>')
 
-    svg_lines.append(section_header(348.6, "Contact"))
-    svg_lines.append(spec_row(363.8, "Email", "ruchitrshinde@gmail.com"))
-    svg_lines.append(spec_row(379.0, "LinkedIn", "in/ravichandrashinde", val_color=accent_green, val_bold=True))
-    svg_lines.append(spec_row(394.2, "GitHub", "@Ravichandra531", val_color=accent_green))
-    svg_lines.append(spec_row(409.4, "Portfolio", "ravichandrashinde.dev"))
-    svg_lines.append(spec_row(424.6, "Location", "India 🇮🇳 · Remote Open"))
+    # Right side lines definition: (line_idx, type, data)
+    # type "header": (user, host, subtitle)
+    # type "divider": ()
+    # type "sec_divider": (title, line_len)
+    # type "kv": (key, val, val_type) -> val_type in ['default', 'accent', 'highlight']
+    
+    right_items = [
+        (0, "header", ("ravi", "ravichandra", "Full-Stack Engineer · 1800+ LeetCode")),
+        (2, "divider", ()),
+        (3, "kv", ("OS", "macOS · Linux (Ubuntu)", "default")),
+        (4, "kv", ("Education", "B.Tech CSE @ Rishihood / NST ('28)", "accent")),
+        (5, "kv", ("LeetCode", "1800+ Rating · Contest Knight", "highlight")),
+        (6, "kv", ("Focus", "Scalable Systems & Realtime Eng.", "default")),
+        (7, "kv", ("Shell", "/bin/zsh · Turborepo Monorepos", "accent")),
+        (9, "kv", ("Ecosystem", "Full-Stack · Realtime · Microservices", "accent")),
+        (10, "kv", ("Lang.Core", "TypeScript · JavaScript · Python · SQL", "default")),
+        (11, "kv", ("Frontend", "Next.js · React · Tailwind CSS · Canvas", "default")),
+        (12, "kv", ("Backend.RT", "Node.js · Express · WebSockets · Prisma", "default")),
+        (13, "kv", ("DevOps.DB", "PostgreSQL · Docker · AWS · CI/CD", "default")),
+        (15, "kv", ("Now", "Realtime Whiteboards & Stream Engines", "highlight")),
+        (16, "kv", ("Architecture", "Sub-50ms Latency · Clean Monorepos", "default")),
+        (18, "sec_divider", ("Contact", 32)),
+        (19, "kv", ("Email", "ravichandra.shinde2024@nst.rishihood.edu.in", "default")),
+        (20, "kv", ("LinkedIn", "in/ravichandrashinde", "accent")),
+        (21, "kv", ("GitHub", "@Ravichandra531", "accent")),
+        (22, "kv", ("LeetCode", "leetcode.com/u/Ravichandra531", "accent")),
+        (23, "kv", ("Location", "India 🇮🇳 · Open for Internships/Roles", "default")),
+        (25, "sec_divider", ("Projects", 31)),
+        (26, "kv", ("Drawlify", "Realtime collab canvas · <50ms WS sync", "accent")),
+        (27, "kv", ("Muzer", "Live stream room & YouTube vote queue", "accent")),
+        (28, "kv", ("HireHub", "Full-stack job portal · RBAC & Prisma", "default")),
+        (29, "kv", ("EasePay", "ACID digital wallet & webhook pipelines", "default")),
+    ]
 
-    svg_lines.append(section_header(455.0, "Highlights"))
-    svg_lines.append(spec_row(470.2, "Drawlify", "Realtime collab canvas & whiteboard", val_color=accent_green, val_bold=True))
-    svg_lines.append(spec_row(485.4, "Muzer", "Interactive collaborative music room", val_color=accent_green, val_bold=True))
-    svg_lines.append(spec_row(500.6, "EasePay", "Modern payment wallet & webhook flow"))
-    svg_lines.append(spec_row(515.8, "OpenSrc", "11+ Repos · Microservices & TurboRepo"))
+    x_key = 456.0
+    x_val = 558.0
 
-    svg_lines.append("</svg>")
+    for item in right_items:
+        line_idx = item[0]
+        itype = item[1]
+        y = start_y + line_idx * line_step
+        
+        if itype == "header":
+            user, host, subtitle = item[2]
+            y_sub = start_y + (line_idx + 1) * line_step
+            svg_lines.append(f'<text y="{y:.1f}" font-size="13"><tspan xml:space="preserve" x="{x_key}" fill="{user_color}" font-weight="700">{user}</tspan><tspan xml:space="preserve" x="{x_key+32:.1f}" fill="{at_color}">@</tspan><tspan xml:space="preserve" x="{x_key+40:.1f}" fill="{host_color}" font-weight="700">{host}</tspan></text>')
+            svg_lines.append(f'<text y="{y_sub:.1f}" font-size="13"><tspan xml:space="preserve" x="{x_key}" fill="{sub_color}">{subtitle}</tspan></text>')
+        
+        elif itype == "divider":
+            svg_lines.append(f'<text y="{y:.1f}" font-size="13"><tspan xml:space="preserve" x="{x_key}" fill="{divider_color}">  ──────────────────────────────────────────</tspan></text>')
+            
+        elif itype == "sec_divider":
+            title, num_dashes = item[2]
+            dashes = "─" * num_dashes
+            # calculate offset for dashes based on title length
+            x_dash = x_key + (len(title) + 3) * 7.8
+            svg_lines.append(f'<text y="{y:.1f}" font-size="13"><tspan xml:space="preserve" x="{x_key}" fill="{sec_header}" font-weight="700">  {title} </tspan><tspan xml:space="preserve" x="{x_dash:.1f}" fill="{divider_color}">{dashes}</tspan></text>')
+            
+        elif itype == "kv":
+            key, val, val_type = item[2]
+            padded_key = f"  {key}".ljust(11)
+            
+            if val_type == "accent":
+                vf = val_accent
+                fw = ' font-weight="700"'
+            elif val_type == "highlight":
+                vf = val_highlight
+                fw = ' font-weight="700"'
+            else:
+                vf = val_default
+                fw = ''
+                
+            # For longer email, use slightly smaller font size or custom styling if needed
+            if key == "Email":
+                svg_lines.append(f'<text y="{y:.1f}" font-size="12.5"><tspan xml:space="preserve" x="{x_key}" fill="{key_color}" font-weight="700">{padded_key}</tspan><tspan xml:space="preserve" x="{x_val}" fill="{vf}"{fw}>{val}</tspan></text>')
+            else:
+                svg_lines.append(f'<text y="{y:.1f}" font-size="13"><tspan xml:space="preserve" x="{x_key}" fill="{key_color}" font-weight="700">{padded_key}</tspan><tspan xml:space="preserve" x="{x_val}" fill="{vf}"{fw}>{val}</tspan></text>')
+
+    svg_lines.append('</svg>')
     return "\n".join(svg_lines)
 
 def main():
-    os.makedirs("assets", exist_ok=True)
+    assets_dir = os.path.join(os.path.dirname(__file__), "assets")
+    os.makedirs(assets_dir, exist_ok=True)
     
-    dark_svg = generate_svg(theme="dark")
-    with open("assets/dark_mode.svg", "w", encoding="utf-8") as f:
+    dark_svg = build_svg("dark")
+    dark_path = os.path.join(assets_dir, "dark_mode.svg")
+    with open(dark_path, "w", encoding="utf-8") as f:
         f.write(dark_svg)
-    print("✅ Generated assets/dark_mode.svg with user photo ASCII art")
-
-    light_svg = generate_svg(theme="light")
-    with open("assets/light_mode.svg", "w", encoding="utf-8") as f:
+    print(f"Generated {dark_path} ({len(dark_svg)} bytes)")
+    
+    light_svg = build_svg("light")
+    light_path = os.path.join(assets_dir, "light_mode.svg")
+    with open(light_path, "w", encoding="utf-8") as f:
         f.write(light_svg)
-    print("✅ Generated assets/light_mode.svg with user photo ASCII art")
+    print(f"Generated {light_path} ({len(light_svg)} bytes)")
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Profile Preview - Ravichandra Shinde</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card-bg: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --heading: #f0f6fc;
+      --accent: #58a6ff;
+      --green: #238636;
+      --green-hover: #2ea043;
+      --table-border: #30363d;
+      --table-alt: #161b22;
+      --quote-border: #30363d;
+    }
+
+    body.light {
+      --bg: #ffffff;
+      --card-bg: #f6f8fa;
+      --border: #d0d7de;
+      --text: #24292f;
+      --text-muted: #57606a;
+      --heading: #1f2328;
+      --accent: #0969da;
+      --green: #1f883d;
+      --green-hover: #1a7f37;
+      --table-border: #d0d7de;
+      --table-alt: #f6f8fa;
+      --quote-border: #d0d7de;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 30px 16px;
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .container {
+      max-width: 880px;
+      width: 100%;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 12px 18px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .theme-toggle {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      transition: all 0.15s ease;
+    }
+
+    button.active {
+      background: var(--green);
+      color: #ffffff;
+      border-color: var(--green-hover);
+    }
+
+    .readme-paper {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+
+    h1, h2, h3, h4 {
+      color: var(--heading);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-top: 28px;
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      font-size: 20px;
+      border-bottom: none;
+    }
+
+    p, li {
+      line-height: 1.6;
+      font-size: 14.5px;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 28px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+
+    th, td {
+      border: 1px solid var(--table-border);
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--card-bg);
+      font-weight: 600;
+    }
+
+    .projects-table td {
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 24px 0;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      vertical-align: middle;
+    }
+
+    .badge-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 8px 0;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <div class="controls">
+      <div style="font-weight: 600; font-size: 14px;">⚡ Ravichandra Shinde — GitHub Profile README</div>
+      <div class="theme-toggle">
+        <button id="btn-dark" class="active" onclick="setTheme('dark')">🌙 Dark Theme</button>
+        <button id="btn-light" onclick="setTheme('light')">☀️ Light Theme</button>
+      </div>
+    </div>
+
+    <div class="readme-paper">
+      <!-- Hero Neofetch SVG -->
+      <div style="text-align: center; margin-bottom: 20px;">
+        <img id="hero-svg" src="assets/dark_mode.svg" alt="Ravichandra Neofetch Card" width="860">
+      </div>
+
+      <hr>
+
+      <h3>🌱 Currently &amp; About Me</h3>
+      <ul>
+        <li>🎓 &nbsp;<b>B.Tech in Computer Science &amp; Engineering</b> ('24 – '28) at <b>Rishihood University, Newton School of Technology</b>.</li>
+        <li>⚡ &nbsp;<b>Algorithmic Problem Solver</b> — <b>1800+ LeetCode Rating</b> (Contest Knight / Top 7% Global). Strong grasp of DSA, Dynamic Programming, Graphs, and Concurrency.</li>
+        <li>🔭 &nbsp;<b>Full-Stack &amp; Systems Builder</b> — Specializing in scalable web apps, real-time collaboration engines (<50ms latency), and monorepo microservice architectures.</li>
+        <li>🧱 &nbsp;<b>Architecture &amp; Clean Code</b> — Engineering multi-service monorepos with <b>Turborepo</b>, shared Prisma schemas, Docker containers, and CI/CD automation.</li>
+      </ul>
+
+      <hr>
+
+      <h3>🛠️ Tech Stack &amp; Toolbox</h3>
+      <table>
+        <thead>
+          <tr>
+            <th width="24%">Category</th>
+            <th>Technologies &amp; Tools</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Languages</b></td>
+            <td>
+              <img src="https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+              <img src="https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript">
+              <img src="https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
+              <img src="https://img.shields.io/badge/-SQL-336791?style=flat-square&logo=postgresql&logoColor=white" alt="SQL">
+              <img src="https://img.shields.io/badge/-C++-00599C?style=flat-square&logo=c%2B%2B&logoColor=white" alt="C++">
+            </td>
+          </tr>
+          <tr>
+            <td><b>Frontend</b></td>
+            <td>
+              <img src="https://img.shields.io/badge/-Next.js_14-000000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js">
+              <img src="https://img.shields.io/badge/-React-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React">
+              <img src="https://img.shields.io/badge/-Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
+              <img src="https://img.shields.io/badge/-HTML5_Canvas-E34F26?style=flat-square&logo=html5&logoColor=white" alt="Canvas">
+              <img src="https://img.shields.io/badge/-Rough.js-FF6B6B?style=flat-square&logo=sketch&logoColor=white" alt="Rough.js">
+              <img src="https://img.shields.io/badge/-Zod-3E67B1?style=flat-square&logo=zod&logoColor=white" alt="Zod">
+            </td>
+          </tr>
+          <tr>
+            <td><b>Backend &amp; Realtime</b></td>
+            <td>
+              <img src="https://img.shields.io/badge/-Node.js-339933?style=flat-square&logo=node.js&logoColor=white" alt="Node.js">
+              <img src="https://img.shields.io/badge/-Express.js-000000?style=flat-square&logo=express&logoColor=white" alt="Express">
+              <img src="https://img.shields.io/badge/-WebSockets-010101?style=flat-square&logo=socketdotio&logoColor=white" alt="WebSockets">
+              <img src="https://img.shields.io/badge/-Turborepo-EF4444?style=flat-square&logo=turborepo&logoColor=white" alt="Turborepo">
+              <img src="https://img.shields.io/badge/-NextAuth.js-000000?style=flat-square&logo=next.js&logoColor=white" alt="NextAuth">
+            </td>
+          </tr>
+          <tr>
+            <td><b>Databases &amp; ORM</b></td>
+            <td>
+              <img src="https://img.shields.io/badge/-PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL">
+              <img src="https://img.shields.io/badge/-Prisma_ORM-2D3748?style=flat-square&logo=prisma&logoColor=white" alt="Prisma">
+              <img src="https://img.shields.io/badge/-Redis-DC382D?style=flat-square&logo=redis&logoColor=white" alt="Redis">
+            </td>
+          </tr>
+          <tr>
+            <td><b>DevOps &amp; Cloud</b></td>
+            <td>
+              <img src="https://img.shields.io/badge/-Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
+              <img src="https://img.shields.io/badge/-AWS-232F3E?style=flat-square&logo=amazon-aws&logoColor=white" alt="AWS">
+              <img src="https://img.shields.io/badge/-GitHub_Actions-2088FF?style=flat-square&logo=github-actions&logoColor=white" alt="CI/CD">
+              <img src="https://img.shields.io/badge/-Vercel-000000?style=flat-square&logo=vercel&logoColor=white" alt="Vercel">
+              <img src="https://img.shields.io/badge/-Render-46E3B7?style=flat-square&logo=render&logoColor=black" alt="Render">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <hr>
+
+      <h3>🚀 Featured Projects</h3>
+      <table class="projects-table" width="100%">
+        <tr>
+          <td width="50%" valign="top">
+            <h3 style="margin-top:0;" align="center">🎨 <a href="https://github.com/Ravichandra531/DRAWLIFY" target="_blank">Drawlify</a></h3>
+            <p><b>Real-time Collaborative Whiteboard &amp; Canvas Engine</b> (March 2026)</p>
+            <p>Infinite canvas sketch platform featuring custom HTML5 Canvas engine with hand-drawn aesthetics (Rough.js), sub-50ms WebSocket sync, multi-service Turborepo monorepo, shared Prisma schema, PostgreSQL, Google OAuth/JWT, Docker &amp; full CI/CD.</p>
+            <p>
+              <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+              <img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js">
+              <img src="https://img.shields.io/badge/WebSockets-010101?style=flat-square&logo=socketdotio&logoColor=white" alt="WebSockets">
+              <img src="https://img.shields.io/badge/Turborepo-EF4444?style=flat-square&logo=turborepo&logoColor=white" alt="Turborepo">
+              <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
+            </p>
+          </td>
+          <td width="50%" valign="top">
+            <h3 style="margin-top:0;" align="center">🎵 <a href="https://github.com/Ravichandra531/Muzer" target="_blank">Muzer</a></h3>
+            <p><b>Interactive Community Music Streaming Platform</b> (December 2025)</p>
+            <p>Real-time music room where audience votes on upcoming YouTube tracks. Features automatic queue reprioritization based on live vote counts, NextAuth.js authentication, Zod validation, and Prisma ORM + PostgreSQL persistence.</p>
+            <p>
+              <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+              <img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js">
+              <img src="https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white" alt="Prisma">
+              <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL">
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td width="50%" valign="top">
+            <h3 style="margin-top:0;" align="center">💼 <a href="https://github.com/Ravichandra531/HireHub" target="_blank">HireHub</a></h3>
+            <p><b>Full-Stack Developer Recruitment Portal</b> (November 2025)</p>
+            <p>Complete recruitment platform with Role-Based Access Control (RBAC), protected employer &amp; candidate workflows, resume evaluation, RESTful Node.js/Express backend APIs, and Prisma ORM with PostgreSQL.</p>
+            <p>
+              <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" alt="JS">
+              <img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React">
+              <img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=node.js&logoColor=white" alt="Node">
+              <img src="https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white" alt="Express">
+            </p>
+          </td>
+          <td width="50%" valign="top">
+            <h3 style="margin-top:0;" align="center">💳 <a href="https://github.com/Ravichandra531/EasePay" target="_blank">EasePay</a></h3>
+            <p><b>ACID-Compliant Digital Payments &amp; Wallet Hub</b></p>
+            <p>Production-grade digital wallet architecture featuring transactional money transfers, mock bank integration, and webhook reconciliation workflows built in a modern Turborepo monorepo.</p>
+            <p>
+              <img src="https://img.shields.io/badge/Turborepo-EF4444?style=flat-square&logo=turborepo&logoColor=white" alt="Turborepo">
+              <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL">
+              <img src="https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white" alt="Prisma">
+              <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
+            </p>
+          </td>
+        </tr>
+      </table>
+
+      <hr>
+
+      <h3>🎓 Education &amp; Academics</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Degree / Certification</th>
+            <th>Institution</th>
+            <th>Year</th>
+            <th>Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>B.Tech in Computer Science &amp; Engineering</b></td>
+            <td>Rishihood University, Newton School of Technology</td>
+            <td>2024 – 2028</td>
+            <td><b>6.79 / 10.0</b></td>
+          </tr>
+          <tr>
+            <td><b>Intermediate (Class XII)</b></td>
+            <td>Shivaji Junior College</td>
+            <td>2023 – 2024</td>
+            <td><b>60.0%</b></td>
+          </tr>
+          <tr>
+            <td><b>Matriculation (Class X)</b></td>
+            <td>Indian Model School</td>
+            <td>2021 – 2022</td>
+            <td><b>72.2%</b></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <hr>
+
+      <h3>📊 Competitive Programming &amp; GitHub Metrics</h3>
+      <div class="stats-row">
+        <!-- LeetCode Badge -->
+        <a href="https://leetcode.com/u/Ravichandra531/" target="_blank">
+          <img src="https://img.shields.io/badge/LeetCode-1800%2B%20Rating%20(Knight)-FFA116?style=for-the-badge&logo=leetcode&logoColor=black" alt="LeetCode 1800+ Rating" height="35" style="margin-bottom: 12px;">
+        </a>
+      </div>
+      <div class="stats-row">
+        <img id="stats-img" src="https://github-readme-stats.vercel.app/api?username=Ravichandra531&show_icons=true&theme=tokyonight&bg_color=0d1117&title_color=5ad3e0&text_color=c9d1d9&icon_color=7ee88a&border_color=30363d&hide_border=false&count_private=true" height="165" alt="GitHub Stats">
+        <img id="langs-img" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Ravichandra531&layout=compact&theme=tokyonight&bg_color=0d1117&title_color=5ad3e0&text_color=c9d1d9&border_color=30363d&hide_border=false" height="165" alt="Top Languages">
+      </div>
+
+      <hr>
+
+      <h3>📫 Connect &amp; Socials</h3>
+      <div class="social-links">
+        <a href="https://linkedin.com/in/ravichandrashinde" target="_blank">
+          <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+        </a>
+        <a href="https://leetcode.com/u/Ravichandra531" target="_blank">
+          <img src="https://img.shields.io/badge/LeetCode-FFA116?style=for-the-badge&logo=leetcode&logoColor=black" alt="LeetCode">
+        </a>
+        <a href="https://github.com/Ravichandra531" target="_blank">
+          <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+        </a>
+        <a href="mailto:ravichandra.shinde2024@nst.rishihood.edu.in">
+          <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email">
+        </a>
+      </div>
+
+      <div style="text-align: center; margin-top: 24px; color: var(--text-muted); font-style: italic;">
+        “Turning complex engineering challenges into elegant, high-performance distributed systems.”
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        document.body.className = 'dark';
+        document.getElementById('btn-dark').className = 'active';
+        document.getElementById('btn-light').className = '';
+        document.getElementById('hero-svg').src = 'assets/dark_mode.svg';
+        document.getElementById('stats-img').src = 'https://github-readme-stats.vercel.app/api?username=Ravichandra531&show_icons=true&theme=tokyonight&bg_color=0d1117&title_color=5ad3e0&text_color=c9d1d9&icon_color=7ee88a&border_color=30363d&hide_border=false&count_private=true';
+        document.getElementById('langs-img').src = 'https://github-readme-stats.vercel.app/api/top-langs/?username=Ravichandra531&layout=compact&theme=tokyonight&bg_color=0d1117&title_color=5ad3e0&text_color=c9d1d9&border_color=30363d&hide_border=false';
+      } else {
+        document.body.className = 'light';
+        document.getElementById('btn-light').className = 'active';
+        document.getElementById('btn-dark').className = '';
+        document.getElementById('hero-svg').src = 'assets/light_mode.svg';
+        document.getElementById('stats-img').src = 'https://github-readme-stats.vercel.app/api?username=Ravichandra531&show_icons=true&theme=default&bg_color=ffffff&title_color=0969da&text_color=24292f&icon_color=1a7f37&border_color=d0d7de&hide_border=false&count_private=true';
+        document.getElementById('langs-img').src = 'https://github-readme-stats.vercel.app/api/top-langs/?username=Ravichandra531&layout=compact&theme=default&bg_color=ffffff&title_color=0969da&text_color=24292f&border_color=d0d7de&hide_border=false';
+      }
+    }
+  </script>
+</body>
+</html>
