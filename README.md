@@ -92,35 +92,8 @@
 
 ---
 
-### 🎓 Education & Academics
-
-| Degree / Course | Institution | Year | Grade |
-| :--- | :--- | :---: | :---: |
-| **Bachelor of Technology (Computer Science)** | **Rishihood University, Newton School of Technology** | 2024 – 2028 | **6.79 / 10.0** |
-| **Intermediate (Class XII)** | Shivaji Junior College | 2023 – 2024 | **60.0%** |
-| **Matriculation (Class X)** | Indian Model School | 2021 – 2022 | **72.2%** |
-
----
-
-### 📊 Competitive Programming & GitHub Metrics
-
 <div align="center">
-  <a href="https://leetcode.com/u/Ravichandra531/" target="_blank">
-    <img src="https://img.shields.io/badge/LeetCode-1800%2B%20Rating%20(Knight)-FFA116?style=for-the-badge&logo=leetcode&logoColor=black" alt="LeetCode 1800+ Rating" height="35" />
-  </a>
-</div>
-
-<br/>
-
-<div align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api?username=Ravichandra531&show_icons=true&theme=tokyonight&bg_color=0d1117&title_color=5ad3e0&text_color=c9d1d9&icon_color=7ee88a&border_color=30363d&hide_border=false&count_private=true">
-    <img alt="Ravichandra's GitHub Stats" src="https://github-readme-stats.vercel.app/api?username=Ravichandra531&show_icons=true&theme=default&bg_color=ffffff&title_color=0969da&text_color=24292f&icon_color=1a7f37&border_color=d0d7de&hide_border=false&count_private=true" height="175">
-  </picture>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/top-langs/?username=Ravichandra531&layout=compact&theme=tokyonight&bg_color=0d1117&title_color=5ad3e0&text_color=c9d1d9&border_color=30363d&hide_border=false">
-    <img alt="Top Languages" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Ravichandra531&layout=compact&theme=default&bg_color=ffffff&title_color=0969da&text_color=24292f&border_color=d0d7de&hide_border=false" height="175">
-  </picture>
+  <img src="./assets/developer_banner.jpg" alt="Developer Workspace" width="860" />
 </div>
 
 ---
